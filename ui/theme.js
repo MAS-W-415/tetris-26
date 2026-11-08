@@ -4,6 +4,24 @@
    canvas rendering parameters. Used by both the game and observer pages. */
 
 (function () {
+  // Copy settings from the old Polyfall key prefix once, so themes, volume,
+  // and best scores survive the rename.
+  try {
+    const oldPrefix = "polyfall_";
+    const newPrefix = "tetris26_";
+    const keys = [];
+    for (let i = 0; i < localStorage.length; i += 1) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith(oldPrefix)) keys.push(key);
+    }
+    for (const key of keys) {
+      const next = newPrefix + key.slice(oldPrefix.length);
+      if (localStorage.getItem(next) === null) {
+        localStorage.setItem(next, localStorage.getItem(key));
+      }
+    }
+  } catch (err) { /* localStorage blocked or unavailable */ }
+
   const THEMES = {
     dark: {
       name: "暗夜", swatch: ["#0f1219", "#1a1f2b", "#4cc9f0", "#ffd166"],
@@ -76,13 +94,13 @@
   };
 
   function currentTheme() {
-    const key = store.get("polyfall_theme", "dark");
+    const key = store.get("tetris26_theme", "dark");
     return THEMES[key] ? key : "dark";
   }
 
   function applyTheme(key) {
     document.body.dataset.theme = key;
-    store.set("polyfall_theme", key);
+    store.set("tetris26_theme", key);
   }
 
   function themeParams(key) {

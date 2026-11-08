@@ -11,9 +11,9 @@ const T = window.TetrisTheme;
 const music = window.TetrisMusic;
 const store = T.store;
 let themeKey = T.currentTheme();
-let soundOn = store.get("polyfall_sound", true);
-let musicOn = store.get("polyfall_music", true);
-let musicVolume = store.get("polyfall_music_volume", 35);
+let soundOn = store.get("tetris26_sound", true);
+let musicOn = store.get("tetris26_music", true);
+let musicVolume = store.get("tetris26_music_volume", 35);
 let palette = [];
 let serverPalette = null;
 
@@ -45,7 +45,7 @@ const audio = {
   ctx: null,
   master: null,
   filter: null,
-  volume: store.get("polyfall_volume", 50),
+  volume: store.get("tetris26_volume", 50),
   ensure() {
     if (this.ctx) {
       if (this.ctx.state === "suspended") this.ctx.resume();
@@ -66,7 +66,7 @@ const audio = {
   },
   setVolume(value) {
     this.volume = value;
-    store.set("polyfall_volume", value);
+    store.set("tetris26_volume", value);
     if (this.master) this.master.gain.value = (value / 100) * 0.9;
   },
   tone(freq, options = {}) {
@@ -163,7 +163,7 @@ function toast(text) {
 
 function bestKey() {
   const bucket = Math.round((state ? state.difficulty : 0) * 10);
-  return `polyfall_best_d${bucket}`;
+  return `tetris26_best_d${bucket}`;
 }
 
 function updateDifficultyLabel(value) {
@@ -376,7 +376,7 @@ function buildLevels(state) {
     btn.addEventListener("click", () => {
       post({ cmd: "assist", enabled: true, level: lv.level });
       document.getElementById("assist-enabled").checked = true;
-      store.set("polyfall_assist", { enabled: true, level: lv.level });
+      store.set("tetris26_assist", { enabled: true, level: lv.level });
     });
     box.appendChild(btn);
   }
@@ -420,16 +420,16 @@ if (urlPlay) showStart(false);
 function applyStoredSettings(state) {
   if (settingsApplied) return;
   settingsApplied = true;
-  const difficulty = store.get("polyfall_difficulty", null);
+  const difficulty = store.get("tetris26_difficulty", null);
   if (difficulty !== null) post({ cmd: "difficulty", value: difficulty });
   if (urlAssist !== null) {
     const level = Math.max(0, Math.min(3, Number(urlAssist) || 0));
     post({ cmd: "assist", enabled: level > 0, level: Math.max(1, level) });
   } else {
-    const assist = store.get("polyfall_assist", null);
+    const assist = store.get("tetris26_assist", null);
     if (assist) post({ cmd: "assist", enabled: !!assist.enabled, level: assist.level || 1 });
   }
-  const speed = store.get("polyfall_speed", null);
+  const speed = store.get("tetris26_speed", null);
   if (speed) post({ cmd: "speed_mode", value: speed });
   if (urlPlay) {
     showStart(false);
@@ -484,11 +484,11 @@ function cycleAssist() {
   const next = order[(order.indexOf(current) + 1) % order.length];
   if (next === 0) {
     post({ cmd: "assist", enabled: false, level: state.assist.level });
-    store.set("polyfall_assist", { enabled: false, level: state.assist.level });
+    store.set("tetris26_assist", { enabled: false, level: state.assist.level });
     toast("辅助 关");
   } else {
     post({ cmd: "assist", enabled: true, level: next });
-    store.set("polyfall_assist", { enabled: true, level: next });
+    store.set("tetris26_assist", { enabled: true, level: next });
     toast(`辅助 L${next}`);
   }
 }
@@ -557,25 +557,25 @@ for (const button of document.querySelectorAll("#touch button")) {
 document.getElementById("difficulty").addEventListener("input", (event) => {
   const v = Number(event.target.value);
   updateDifficultyLabel(v);
-  store.set("polyfall_difficulty", v / 100);
+  store.set("tetris26_difficulty", v / 100);
   post({ cmd: "difficulty", value: v / 100 });
 });
 
 document.getElementById("assist-enabled").addEventListener("change", (event) => {
   const level = state ? state.assist.level : 1;
   post({ cmd: "assist", enabled: event.target.checked, level });
-  store.set("polyfall_assist", { enabled: event.target.checked, level });
+  store.set("tetris26_assist", { enabled: event.target.checked, level });
 });
 
 document.getElementById("speed-toggle").addEventListener("change", (event) => {
   const value = event.target.checked ? "progressive" : "fixed";
   post({ cmd: "speed_mode", value });
-  store.set("polyfall_speed", value);
+  store.set("tetris26_speed", value);
 });
 
 document.getElementById("sound-toggle").addEventListener("change", (event) => {
   soundOn = event.target.checked;
-  store.set("polyfall_sound", soundOn);
+  store.set("tetris26_sound", soundOn);
 });
 
 document.getElementById("volume").addEventListener("input", (event) => {
@@ -584,20 +584,20 @@ document.getElementById("volume").addEventListener("input", (event) => {
 
 document.getElementById("music-toggle").addEventListener("change", (event) => {
   musicOn = event.target.checked;
-  store.set("polyfall_music", musicOn);
+  store.set("tetris26_music", musicOn);
   syncMusic();
 });
 
 document.getElementById("music-volume").addEventListener("input", (event) => {
   musicVolume = Number(event.target.value);
-  store.set("polyfall_music_volume", musicVolume);
+  store.set("tetris26_music_volume", musicVolume);
   music.setVolume(musicVolume);
   syncMusic();
 });
 
 document.getElementById("btn-sound").addEventListener("click", () => {
   soundOn = !soundOn;
-  store.set("polyfall_sound", soundOn);
+  store.set("tetris26_sound", soundOn);
   document.getElementById("btn-sound").textContent = soundOn ? "🔊" : "🔇";
 });
 

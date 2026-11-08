@@ -1,71 +1,115 @@
-# Polyfall
+<p align="center">
+  <a href="./README.md">English</a> · <a href="./README.zh-CN.md">简体中文</a>
+</p>
 
-不止七块的俄罗斯方块：**任意 3–5 格多格骨牌**（4×4 内连通图案，共 26 种），
-外加一个懂每种方块的 AI——它能给每个方块实时评分、按你的设置把最难的那块发给你，
-也能用三档"落点提示"当你的教练。
+<p align="center">
+  <img src="docs/images/readme-hero.png" alt="Tetris 26" width="100%">
+</p>
 
-打开浏览器即玩，也可以下载单文件直接运行（零依赖）。
+<h1 align="center">Tetris 26</h1>
 
-![Polyfall 开始界面](docs/images/title.png)
+<p align="center">
+  26 pieces. An AI that scores every one and tells you where to put the current piece.<br>
+  Play in your browser, or download a single file. No install.
+</p>
 
-## 运行
+<p align="center">
+  <img alt="Python 3.11+" src="https://img.shields.io/badge/Python-3.11%2B-3776AB?style=for-the-badge&logo=python&logoColor=white">
+  <img alt="MIT License" src="https://img.shields.io/badge/License-MIT-2ea44f?style=for-the-badge">
+  <img alt="Linux, macOS, Windows" src="https://img.shields.io/badge/Platform-Linux%20%7C%20macOS%20%7C%20Windows-555?style=for-the-badge">
+  <img alt="No dependencies" src="https://img.shields.io/badge/Dependencies-none-brightgreen?style=for-the-badge">
+</p>
 
-### 下载（推荐）
+## What is this?
 
-到 [Releases](../../releases) 下载对应系统的文件：
+Tetris 26 is a falling-block game with 26 pieces: every connected polyomino of
+3–5 cells that fits in a 4×4 box. It runs locally in your browser, and the same
+game is available as a single executable with no runtime dependencies.
 
-| 系统 | 文件 |
+## Features
+
+| Feature | What it does |
 |---|---|
-| Linux | `polyfall-linux` |
-| macOS | `polyfall-macos` |
-| Windows | `polyfall-windows.exe` |
+| **26 pieces** | All connected 3–5 cell polyominoes that fit in a 4×4 box. |
+| **AI scoring** | Every piece gets a score for the current board. |
+| **Difficulty slider** | Higher means you're more likely to get the hardest piece. |
+| **Hints** | Three levels, from basic to advanced. |
+| **7 themes** | Dark, pixel, neon, paper, ocean, sakura, and terminal. |
+| **Single file** | No dependencies, no install. |
 
-运行后浏览器会自动打开 `http://localhost:8000`（Linux / macOS 下可能需先 `chmod +x`）。
+<p align="center">
+  <img src="docs/images/gameplay.png" alt="Gameplay" width="720">
+</p>
 
-### 从源码
+## Themes
 
-需要 Python 3.11+ 与 [uv](https://docs.astral.sh/uv/)：
+<p align="center">
+  <img src="docs/images/themes.png" alt="Seven themes" width="100%">
+</p>
+
+## Download
+
+| Platform | File |
+|---|---|
+| Linux | [`tetris26-linux`](../../releases/latest/download/tetris26-linux) |
+| macOS | [`tetris26-macos`](../../releases/latest/download/tetris26-macos) |
+| Windows | [`tetris26-windows.exe`](../../releases/latest/download/tetris26-windows.exe) |
+
+On Linux and macOS, you may need `chmod +x` first. The game opens in your browser
+at <http://localhost:8000>.
+
+## Controls
+
+| Key | Action |
+|:---:|---|
+| <kbd>←</kbd> <kbd>→</kbd> | Move |
+| <kbd>↑</kbd> / <kbd>X</kbd> | Rotate clockwise |
+| <kbd>Z</kbd> | Rotate counterclockwise |
+| <kbd>↓</kbd> | Soft drop |
+| <kbd>Space</kbd> | Hard drop |
+| <kbd>C</kbd> | Hold |
+| <kbd>A</kbd> | Cycle hints |
+| <kbd>P</kbd> | Pause |
+| <kbd>R</kbd> | Restart |
+
+Touch controls are available on the game page.
+
+## Run from source
+
+Requires Python 3.11+ and [uv](https://docs.astral.sh/uv/).
 
 ```bash
 uv sync
 uv run python run.py
 ```
 
-同目录 `.env` 可改端口与是否自动打开浏览器。
+The server reads `.env` for `HOST`, `PORT`, `AUTO_OPEN`, and `PUBLIC`.
 
-## 操作
+<details>
+<summary>How the AI works</summary>
 
-| 按键 | 功能 |
-|---|---|
-| ← → | 移动（长按连发） |
-| ↑ / X | 顺时针旋转 |
-| Z | 逆时针旋转 |
-| ↓ | 软降 |
-| 空格 | 硬降 |
-| C | 暂存 |
-| A | AI 辅助：关 / L1 / L2 / L3 循环 |
-| P | 暂停 · R | 重开 |
+Each piece is scored by nine Dellacherie–Thiery features. Hints use a pruned
+lookahead over the next pieces in the queue, with three strength levels. The
+difficulty slider uses the same scores to sample among the hardest pieces.
 
-触屏玩家可用页面侧边按钮（支持长按连发）。
+The runtime is pure numpy; no ML framework is required. Difficulty scoring uses
+the published DT-20 weights, and hints use the optional `tuned_weights.npz` when
+it is present.
 
-## 玩法要点
+</details>
 
-![七种主题风格](docs/images/themes.png)
+<details>
+<summary>References</summary>
 
-![AI 演示](docs/images/demo.gif)
+- Dellacherie (1988); Fahey (2003); Thiery & Scherrer (2009)
+- DT-10/DT-20 weights: Gabillon et al. (2013); Scherrer et al. (2015); Chen et al. (2026, arXiv:2603.26765)
+- "Hardest piece" rule: HATETRIS (qntm, 2010)
 
-- **难度**：0–100% 无极调节，数值是"把当前最难块发给你的概率"
-- **AI 辅助**：青色轮廓标出建议落点，三档聪明度；新块出生先给快速提示，随后精算替换
-- **风格**：暗夜 / 像素 / 霓虹 / 纸白 / 深海 / 樱花 / 终端
-- **等级加速**：每消 10 行升 1 级，可关闭
-- 幽灵块、暂存、下一块预览、音效、分难度最高分
-
-## 参考
-
-- Dellacherie (1988)；Fahey (2003)；Thiery & Scherrer (2009)
-- DT-10/DT-20 权重：Gabillon et al. (2013)；Scherrer et al. (2015)；Chen et al. (2026, arXiv:2603.26765)
-- "最难方块"规则：HATETRIS（qntm, 2010）
+</details>
 
 ## License
 
-MIT
+MIT. See [LICENSE](LICENSE).
+
+Tetris 26 is an independent project. It is not affiliated with or endorsed by
+The Tetris Company. Tetris is a registered trademark of The Tetris Company.

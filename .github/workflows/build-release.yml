@@ -24,24 +24,24 @@ jobs:
         run: uv sync --dev
 
       - name: Build executable
-        run: uv run pyinstaller polyfall.spec --noconfirm
+        run: uv run pyinstaller tetris26.spec --noconfirm
 
       - name: Rename artifact per platform
         shell: bash
         run: |
           mkdir -p out
           if [ "${{ runner.os }}" = "Windows" ]; then
-            cp dist/polyfall.exe "out/polyfall-windows.exe"
+            cp dist/tetris26.exe "out/tetris26-windows.exe"
           elif [ "${{ runner.os }}" = "macOS" ]; then
-            cp dist/polyfall "out/polyfall-macos"
+            cp dist/tetris26 "out/tetris26-macos"
           else
-            cp dist/polyfall "out/polyfall-linux"
+            cp dist/tetris26 "out/tetris26-linux"
           fi
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: polyfall-${{ runner.os }}
+          name: tetris26-${{ runner.os }}
           path: out/*
 
       - name: Publish release

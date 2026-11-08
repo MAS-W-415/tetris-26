@@ -1,6 +1,6 @@
 [project]
-name = "polyfall"
-version = "0.1.0"
+name = "tetris-26"
+version = "0.2.0"
 requires-python = ">=3.11"
 dependencies = [
     "numpy>=2.4.6",

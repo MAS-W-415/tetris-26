@@ -1,4 +1,4 @@
-"""Entry point for Polyfall.
+"""Entry point for Tetris 26.
 
 Reads .env (if present) and starts the local server:
     uv run python run.py            # then open http://127.0.0.1:8000

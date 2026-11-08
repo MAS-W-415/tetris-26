@@ -441,9 +441,9 @@ def run(port=8000, host="127.0.0.1", auto_open=True, public=False):
     server = ThreadingHTTPServer((host, port), Handler)
     url = f"http://{host}:{port}/"
     if public:
-        print(f"Polyfall running at {url}  (Ctrl+C to stop)")
+        print(f"Tetris 26 running at {url}  (Ctrl+C to stop)")
     else:
-        print(f"Polyfall running at {url}  (observer: {url}observer)")
+        print(f"Tetris 26 running at {url}  (observer: {url}observer)")
     if auto_open:
         threading.Timer(0.5, lambda: __import__("webbrowser").open(url)).start()
     try:

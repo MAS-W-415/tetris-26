@@ -1,5 +1,5 @@
 # -*- mode: python ; coding: utf-8 -*-
-"""PyInstaller spec: build the single-file Polyfall executable."""
+"""PyInstaller spec: build the single-file Tetris 26 executable."""
 
 import os
 
@@ -28,7 +28,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name="polyfall",
+    name="tetris26",
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
