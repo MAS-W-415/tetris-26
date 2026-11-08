@@ -11,7 +11,8 @@ with a numpy AI. Python 3.11+ stdlib HTTP server, vanilla JS UI; no frontend bui
 - There is no test suite, linter, formatter, or typecheck config. Minimum check:
   `uv run python -m py_compile *.py`, then start the server and inspect `GET /state`.
 - Single-file build: `uv sync --dev && uv run pyinstaller tetris26.spec --noconfirm`
-  (artifact in `dist/`). Add new runtime data files to `tetris26.spec`'s `datas`;
+  (artifact: `dist/tetris26`, or `dist/tetris26.exe` on Windows). Add new runtime
+  data files to `tetris26.spec`'s `datas`;
   `paths.base_dir()` already handles source vs PyInstaller `_MEIPASS`.
   CI builds Linux/macOS/Windows and publishes on `v*` tags.
 - Runtime deps are deliberately minimal (numpy only); the spec excludes torch etc.
